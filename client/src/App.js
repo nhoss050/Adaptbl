@@ -1,8 +1,23 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import './App.css';
+
 
 class App extends Component {
+
+  componentDidMount() {
+    this.getUser()
+  }
+
+  getUser() {
+    return fetch(`/users`, {
+      credentials: 'include'
+    })
+    .then(response => {
+      console.log(response);
+      return response.json();
+    })
+  }
+
   render() {
     return (
       <div className="App">

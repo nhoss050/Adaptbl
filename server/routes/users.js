@@ -20,9 +20,11 @@ module.exports = (knex) => {
     .then(([restaurant]) =>{
       if(restaurant) {
 
+        console.log("restaurant exist")
+
         return knex('likes').update( 'like', (restaurant.like)+1).where('name', req.body.name)
         .then((results) => {
-          return knex('likes').select('like').where({name: req.body.name}).limit(1)
+          return knex('likes').select('*').orderByRaw('like').limit(10)
         })
         .then(([likes]) => {
           res.json(likes);
@@ -30,13 +32,18 @@ module.exports = (knex) => {
 
       } else {
 
+        console.log("restaurant doesnt exist")
+
         let data = {
           name: req.body.name,
           like: 1
         }
         return knex('likes').insert(data).returning('like')
         .then(([likes]) => {
-          res.json(likes);
+          return knex('likes').select('*').orderByRaw('like').limit(10)
+        })
+        .then(([table]) => {
+          res.json(table);
         })
       }
     })

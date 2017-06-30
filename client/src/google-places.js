@@ -58,15 +58,15 @@ class GooglePlaces extends Component {
   }
 
   handleClick = (e) => {
-    let data = { name: e.target.name}
-    fetch(`/users/likes`, {
+    return fetch(`/users/likes`, {
       method: 'POST',
       headers: {'content-Type': 'application/json'},
-      body: JSON.stringify(data),
-      credentials: "include"
+      credentials: "include",
+      body: {
+        name: e.target.name
+      }
     })
-    .then((response) => { return response.json(); })
-    .then((data) => { console.log(data)  });
+    .then((response) => { console.log(response.json()) })
   }
 
 

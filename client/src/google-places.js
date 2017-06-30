@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Thumbnail } from 'react-bootstrap';
+import { Thumbnail, Button } from 'react-bootstrap';
 
 
 const google = window.google;
@@ -11,8 +11,6 @@ class GooglePlaces extends Component {
       place: []
     }
   }
-
-
 
   componentWillReceiveProps(nextProps) {
 
@@ -36,16 +34,16 @@ class GooglePlaces extends Component {
       service.textSearch(request, (result, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK){
           for (var i = 0; i < 2; i++){
-            let term = result[i].name
-            let city = nextProps.city
+            // let term = result[i].name
+            // let city = nextProps.city
 
-            fetch( `/yelp?term=${term}&city=${city}`, {
-              credentials: 'same-origin'
-            })
-            .then(res => res.json())
-            .then(data => {
-              console.log(data)
-            })
+            // fetch( `/yelp?term=${term}&city=${city}`, {
+            //   credentials: 'same-origin'
+            // })
+            // .then(res => res.json())
+            // .then(data => {
+            //   console.log(data)
+            // })
 
             places.push(result[i])
           }
@@ -59,6 +57,17 @@ class GooglePlaces extends Component {
     }
   }
 
+  handleClick = (e) => {
+    let data = { name: e.target.name}
+    fetch(`/users/likes`, {
+      method: 'POST',
+      headers: {'content-Type': 'application/json'},
+      body: JSON.stringify(data),
+      credentials: "include"
+    })
+    .then((response) => { return response.json(); })
+    .then((data) => { console.log(data)  });
+  }
 
 
   render(){
@@ -76,6 +85,7 @@ class GooglePlaces extends Component {
           <p> {address} </p>
           <p> {open ? "Open Now" : "Closed"} </p>
           <p> {rating ? `Google rating: ${rating}` : ''} </p>
+          <Button bsStyle="default" name={name} onClick={this.handleClick}>Like</Button>
           </Thumbnail>
         </div>
       );

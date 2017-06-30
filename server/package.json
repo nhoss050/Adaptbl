@@ -19,7 +19,9 @@
     "knex": "^0.11.7",
     "knex-logger": "^0.1.0",
     "morgan": "^1.7.0",
-    "pg": "^6.0.2"
+    "pg": "^6.0.2",
+    "yelp-fusion-v3": "0.0.8",
+    "yelpv3": "^1.2.1"
   },
   "devDependencies": {
     "nodemon": "^1.9.2",

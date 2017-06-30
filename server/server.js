@@ -7,6 +7,7 @@ const ENV         = process.env.ENV || "development";
 const express     = require("express");
 const bodyParser  = require("body-parser");
 const app         = express();
+const Yelp        = require('yelp-fusion-v3');
 
 const knexConfig  = require("./knexfile");
 const knex        = require("knex")(knexConfig[ENV]);
@@ -28,6 +29,29 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
+
+
+
+
+app.get('/yelp', (req, res) => {
+console.log(req.query)
+let yelp = new Yelp({
+  client_id: process.env.client_id,
+  client_secret: process.env.client_secret
+})
+
+yelp.getToken();
+let query = {term: req.query.term, location: req.query.city, limit: 2};
+yelp.getBusinesses(query)
+  .then( data => {
+    console.log(typeof data)
+    res.json(data)
+  })
+  .catch(e => {
+    res.json(e)
+  })
+})
+
 
 // Mount all resource routes
 app.use("/users", usersRoutes(knex));

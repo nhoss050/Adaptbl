@@ -94,7 +94,7 @@ class App extends Component {
             </Form>
           </div>
         </div>
-        <GooglePlaces lat={this.state.lat} lng={this.state.lng} food={this.state.typeFood} />
+        <GooglePlaces lat={this.state.lat} lng={this.state.lng} food={this.state.typeFood} city={this.state.value}/>
       </div>
     );
   }

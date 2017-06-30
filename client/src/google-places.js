@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Thumbnail } from 'react-bootstrap';
 
+
 const google = window.google;
 
 class GooglePlaces extends Component {
@@ -11,7 +12,10 @@ class GooglePlaces extends Component {
     }
   }
 
+
+
   componentWillReceiveProps(nextProps) {
+
     if (nextProps.food){
       let map = new google.maps.Map(this.refs.map, {
         zoom: 12,
@@ -40,28 +44,41 @@ class GooglePlaces extends Component {
         }
       });
 
+      let newData = this.state.place.map( ele => {
+        let term = ele.name
+        let city = nextProps.city
+
+        fetch( `/yelp?term=${term}&city=${city}`, {
+          credentials: 'same-origin'
+        })
+        .then(res => res.json())
+        .then(data => {
+          let x = JSON.parse(data);
+          console.log(x)
+        })
+      });
     }
   }
 
   render(){
 
-      const thumbnailPlace = this.state.place.map(elem => {
-        const address = elem.formatted_address;
-        const rating = elem.rating;
-        const open = elem.opening_hours ? elem.opening_hours.open_now : false;
-        const name = elem.name;
+    const thumbnailPlace = this.state.place.map(elem => {
+      const address = elem.formatted_address;
+      const rating = elem.rating;
+      const open = elem.opening_hours ? elem.opening_hours.open_now : false;
+      const name = elem.name;
 
-        return (
-          <div className="col-sm-4 col-sm-offset-1" key={elem.id}>
-            <Thumbnail  >
-            <h3> {name} </h3>
-            <p> {address} </p>
-            <p> {open ? "Open Now" : "Closed"} </p>
-            <p> Google Rating: {rating} </p>
-            </Thumbnail>
-          </div>
-        );
-      })
+      return (
+        <div className="col-sm-4 col-sm-offset-1" key={elem.id}>
+          <Thumbnail  >
+          <h3> {name} </h3>
+          <p> {address} </p>
+          <p> {open ? "Open Now" : "Closed"} </p>
+          <p> Google Rating: {rating} </p>
+          </Thumbnail>
+        </div>
+      );
+    })
 
 
     return (

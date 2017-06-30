@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
+import { Thumbnail } from 'react-bootstrap';
+
 const google = window.google;
 
 class GooglePlaces extends Component {
-
+  constructor(props){
+    super(props);
+    this.state = {
+      place: []
+    }
+  }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.lat){
+    if (nextProps.food){
       let map = new google.maps.Map(this.refs.map, {
         zoom: 12,
         center: {
@@ -15,29 +22,56 @@ class GooglePlaces extends Component {
       })
 
       let place = new google.maps.LatLng(nextProps.lat, nextProps.lng);
-
       let request = {
       location: place,
-      radius: '500',
-      query: nextProps.typeFood,
-      type: 'restaurant'
+      radius: '2000',
+      query: nextProps.food
       };
       let places = []
       let service = new google.maps.places.PlacesService(map);
       service.textSearch(request, (result, status) => {
-        if (status == google.maps.places.PlacesServiceStatus.OK){
+        if (status === google.maps.places.PlacesServiceStatus.OK){
           for (var i = 0; i < 2; i++){
-            places.push(result[i]);
+            places.push(result[i])
           }
+          this.setState({
+            place:  places
+          });
         }
       });
-      console.log(places)
+
     }
   }
 
-
   render(){
-    return <div ref='map' />
+
+      const thumbnailPlace = this.state.place.map(elem => {
+        const address = elem.formatted_address;
+        const rating = elem.rating;
+        const open = elem.opening_hours ? elem.opening_hours.open_now : false;
+        const name = elem.name;
+
+        return (
+          <div className="col-sm-4 col-sm-offset-1" key={elem.id}>
+            <Thumbnail  >
+            <h3> {name} </h3>
+            <p> {address} </p>
+            <p> {open ? "Open Now" : "Closed"} </p>
+            <p> Google Rating: {rating} </p>
+            </Thumbnail>
+          </div>
+        );
+      })
+
+
+    return (
+    <div >
+      <div ref='map' />
+      <div className="row">
+        {this.state.place ? thumbnailPlace : <div> Loading... </div>}
+      </div>
+    </div>
+    );
   }
 
 }

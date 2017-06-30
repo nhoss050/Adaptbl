@@ -11,10 +11,9 @@ class App extends Component {
   }
 
   handleChange = (e) => {
-    const input = e.target.name;
+
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    console.log(value)
-    if (value == ('vancouver' || 'burnaby' || 'richmond') ){
+    if (value === 'vancouver' || value === 'burnaby' || value === 'richmond' ){
       this.setState({
         value
       })
@@ -28,21 +27,21 @@ class App extends Component {
   }
 
   getLatLng = (name) => {
-    if (name == 'vancouver' ){
+    if (name === 'vancouver' ){
       this.setState({
         lat: 49.278101,
         lng: -123.122190,
         category: ['Vietnamese Food', 'Greek Food']
       })
     }
-    if (name == 'burnaby'){
+    if (name === 'burnaby'){
       this.setState({
         lat: 49.248378,
         lng: -122.980383,
         category: ['Chinese Food', 'Italian Food']
       })
     }
-    if (name == 'richmond'){
+    if (name === 'richmond'){
       this.setState({
         lat: 49.174856,
         lng: -123.133577,
@@ -50,6 +49,7 @@ class App extends Component {
       })
     }
   }
+
 
 
 

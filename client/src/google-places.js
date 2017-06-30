@@ -16,7 +16,7 @@ class GooglePlaces extends Component {
 
   componentWillReceiveProps(nextProps) {
 
-    if (nextProps.food){
+    if (this.props.food != nextProps.food){
       let map = new google.maps.Map(this.refs.map, {
         zoom: 12,
         center: {
@@ -28,7 +28,7 @@ class GooglePlaces extends Component {
       let place = new google.maps.LatLng(nextProps.lat, nextProps.lng);
       let request = {
       location: place,
-      radius: '2000',
+      radius: '3000',
       query: nextProps.food
       };
       let places = []
@@ -36,6 +36,17 @@ class GooglePlaces extends Component {
       service.textSearch(request, (result, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK){
           for (var i = 0; i < 2; i++){
+            let term = result[i].name
+            let city = nextProps.city
+
+            fetch( `/yelp?term=${term}&city=${city}`, {
+              credentials: 'same-origin'
+            })
+            .then(res => res.json())
+            .then(data => {
+              console.log(data)
+            })
+
             places.push(result[i])
           }
           this.setState({
@@ -44,21 +55,11 @@ class GooglePlaces extends Component {
         }
       });
 
-      let newData = this.state.place.map( ele => {
-        let term = ele.name
-        let city = nextProps.city
 
-        fetch( `/yelp?term=${term}&city=${city}`, {
-          credentials: 'same-origin'
-        })
-        .then(res => res.json())
-        .then(data => {
-          let x = JSON.parse(data);
-          console.log(x)
-        })
-      });
     }
   }
+
+
 
   render(){
 
@@ -74,7 +75,7 @@ class GooglePlaces extends Component {
           <h3> {name} </h3>
           <p> {address} </p>
           <p> {open ? "Open Now" : "Closed"} </p>
-          <p> Google Rating: {rating} </p>
+          <p> {rating ? `Google rating: ${rating}` : ''} </p>
           </Thumbnail>
         </div>
       );

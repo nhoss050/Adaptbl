@@ -8,7 +8,7 @@ const express     = require("express");
 const bodyParser  = require("body-parser");
 const app         = express();
 const Yelp        = require('yelp-fusion-v3');
-
+const _           = require('lodash');
 const knexConfig  = require("./knexfile");
 const knex        = require("knex")(knexConfig[ENV]);
 const morgan      = require('morgan');
@@ -30,23 +30,31 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
 
-
-
-
-app.get('/yelp', (req, res) => {
-console.log(req.query)
 let yelp = new Yelp({
   client_id: process.env.client_id,
   client_secret: process.env.client_secret
 })
 
 yelp.getToken();
-let query = {term: req.query.term, location: req.query.city, limit: 2};
+
+app.get('/yelp', (req, res) => {
+console.log(req.query);
+
+let query = {term: req.query.term, location: req.query.city, limit: 15};
 yelp.getBusinesses(query)
   .then( data => {
-    console.log(typeof data)
-    res.json(data)
+    return JSON.parse(data)
   })
+  .then (name => {
+    let object = _.find(name.businesses, obj => {
+      if (_.includes(req.query.term, obj.name)){
+        return obj.name;
+      }
+    });
+    console.log(object)
+    res.json(name)
+  })
+
   .catch(e => {
     res.json(e)
   })

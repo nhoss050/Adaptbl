@@ -16,6 +16,8 @@ module.exports = (knex) => {
 
   router.post("/likes", (req, res) => {
 
+    console.log(req.body)
+
     knex('likes').select('*').where({name: req.body.name}).limit(1)
     .then(([restaurant]) =>{
       if(restaurant) {

@@ -31,7 +31,7 @@ class App extends Component {
       this.setState({
         lat: 49.278101,
         lng: -123.122190,
-        category: ['Vietnamese Food', 'Greek Food']
+        category: ['Mexican Food', 'Japanese Food']
       })
     }
     if (name === 'burnaby'){
